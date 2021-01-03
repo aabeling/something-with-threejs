@@ -113,7 +113,7 @@ export class CityBuilder {
         let geometry = new BoxBufferGeometry(width, height, depth);
         let material = new MeshBasicMaterial({ color: 0xF4A460, side: DoubleSide });
         let mesh = new Mesh(geometry, material);
-
+        mesh.translateY(height/2);
         let result = new Group();
         result.add(mesh);
 
