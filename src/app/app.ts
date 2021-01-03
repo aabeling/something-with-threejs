@@ -1,5 +1,5 @@
-import { Color, DirectionalLight, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
-import { Brick } from './brick';
+import { AxesHelper, Color, DirectionalLight, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
+import { CityBuilder } from './citybuilder';
 
 export class App {
 
@@ -10,20 +10,21 @@ export class App {
     canvas: document.getElementById('main-canvas') as HTMLCanvasElement,
   });
 
-  private brick: Brick;
-
   constructor() {
 
+    const axes = new AxesHelper();
+    axes.renderOrder = 1;
+    this.scene.add(axes);
+
     const color = 0xFFFFFF;
-  const intensity = 1;
-  const light = new DirectionalLight(color, intensity);
-  light.position.set(-1, 2, 4);
-  this.scene.add(light);
+    const intensity = 1;
+    const light = new DirectionalLight(color, intensity);
+    light.position.set(-1, 2, 4);
+    this.scene.add(light);
 
-    this.brick = new Brick(100, new Color('rgb(50,50,0)'));
-    this.scene.add(this.brick);
+    new CityBuilder(this.scene, 100).create();
 
-    this.camera.position.set(200, 200, 200);
+    this.camera.position.set(0, 500, 1000);
     this.camera.lookAt(new Vector3(0, 0, 0));
 
     this.renderer.setSize(innerWidth, innerHeight);
@@ -43,6 +44,6 @@ export class App {
     requestAnimationFrame(() => this.render());
 
     this.adjustCanvasSize();
-    this.brick.rotateY(0.03);
+    this.scene.rotateY(0.01);
   }
 }
