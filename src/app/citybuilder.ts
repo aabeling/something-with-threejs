@@ -1,4 +1,4 @@
-import { BoxBufferGeometry, Color, DoubleSide, Group, Mesh, MeshBasicMaterial, Object3D, PlaneBufferGeometry, RingBufferGeometry, Scene } from "three";
+import { BoxBufferGeometry, Color, DoubleSide, Group, Mesh, MeshBasicMaterial, MeshPhongMaterial, Object3D, PlaneBufferGeometry, RingBufferGeometry, Scene } from "three";
 
 /* plains */
 const PEP: number = 1; // plain empty
@@ -29,12 +29,12 @@ export class CityBuilder {
         [CSE, SEW, SEW, SEW, SEW, SEW, SEW, SEW, SEW, CSW],
         [SNS, PH1, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
         [SNS, PEP, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
-        [SNS, PH1, PEP, PEP, PEP, PH1, PEP, PEP, PEP, SNS],
+        [SNS, PH1, PEP, PEP, PEP, PH1, PH1, PEP, PEP, SNS],
         [SNS, PEP, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
         [SNS, PEP, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
-        [SNS, PEP, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
+        [SNS, PEP, PEP, PEP, PEP, PH1, PEP, PEP, PEP, SNS],
         [SNS, PEP, PEP, PH1, PEP, PEP, PEP, PEP, PEP, SNS],
-        [SNS, PH1, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
+        [SNS, PH1, PEP, PEP, PEP, PEP, PH1, PEP, PEP, SNS],
         [CNE, SEW, SEW, SEW, SEW, SEW, SEW, SEW, SEW, CNW]
     ];
 
@@ -111,7 +111,7 @@ export class CityBuilder {
         let depth = this.random(this.fieldWidth / 2, this.fieldWidth);
 
         let geometry = new BoxBufferGeometry(width, height, depth);
-        let material = new MeshBasicMaterial({ color: 0xF4A460, side: DoubleSide });
+        let material = new MeshPhongMaterial({ color: 0xF4A460, side: DoubleSide });
         let mesh = new Mesh(geometry, material);
         mesh.translateY(height/2);
         let result = new Group();

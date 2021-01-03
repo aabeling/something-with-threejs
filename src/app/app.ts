@@ -1,6 +1,7 @@
 import { AxesHelper, Clock, Color, DirectionalLight, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
 import { CityBuilder } from './citybuilder';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
+import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
 
 export class App {
 
@@ -10,7 +11,7 @@ export class App {
     antialias: true,
     canvas: document.getElementById('main-canvas') as HTMLCanvasElement,
   });
-  private controls : FlyControls;
+  private controls : any;
   private clock : Clock = new Clock();
 
   constructor() {
@@ -33,10 +34,9 @@ export class App {
     this.renderer.setSize(innerWidth, innerHeight);
     this.renderer.setClearColor(new Color('rgb(0,0,0)'));
 
-    this.controls = new FlyControls(this.camera, this.renderer.domElement);
-    this.controls.dragToLook = false;
+    this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
     this.controls.movementSpeed = 100;
-    this.controls.rollSpeed = 0.1;
+    this.controls.lookSpeed = 0.1;
 
     this.render();
   }
