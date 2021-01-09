@@ -2,6 +2,7 @@ import { AxesHelper, Clock, Color, DirectionalLight, PerspectiveCamera, Scene, V
 import { CityBuilder } from './citybuilder';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export class App {
 
@@ -34,11 +35,20 @@ export class App {
     this.renderer.setSize(innerWidth, innerHeight);
     this.renderer.setClearColor(new Color('rgb(0,0,0)'));
 
+    this.setOrbitControls();
+
+    this.render();
+  }
+
+  private setFirstPersonControls() {
+
     this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
     this.controls.movementSpeed = 100;
     this.controls.lookSpeed = 0.1;
+  }
 
-    this.render();
+  private setOrbitControls() {
+    this.controls = new OrbitControls( this.camera, this.renderer.domElement );
   }
 
   private adjustCanvasSize() {
@@ -55,6 +65,5 @@ export class App {
     this.adjustCanvasSize();
     const delta = this.clock.getDelta();
     this.controls.update(delta);
-    //this.scene.rotateY(0.01);
   }
 }

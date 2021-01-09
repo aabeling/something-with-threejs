@@ -27,14 +27,14 @@ export class CityBuilder {
     private planSizeY: number = 10;
     private plan: number[][] = [
         [CSE, SEW, SEW, SEW, SEW, SEW, SEW, SEW, SEW, CSW],
-        [SNS, PH1, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
+        [SNS, PH1, PEP, PEP, PEP, PEP, PEP, PH1, PEP, SNS],
         [SNS, PEP, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
-        [SNS, PH1, PEP, PEP, PEP, PH1, PH1, PEP, PEP, SNS],
-        [SNS, PEP, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
+        [SNS, PH1, PEP, PH1, PEP, PH1, PH1, PH1, PH1, SNS],
         [SNS, PEP, PEP, PEP, PEP, PEP, PEP, PEP, PEP, SNS],
         [SNS, PEP, PEP, PEP, PEP, PH1, PEP, PEP, PEP, SNS],
+        [SNS, PEP, PH1, PEP, PEP, PH1, PEP, PEP, PH1, SNS],
         [SNS, PEP, PEP, PH1, PEP, PEP, PEP, PEP, PEP, SNS],
-        [SNS, PH1, PEP, PEP, PEP, PEP, PH1, PEP, PEP, SNS],
+        [SNS, PH1, PEP, PEP, PH1, PEP, PH1, PEP, PEP, SNS],
         [CNE, SEW, SEW, SEW, SEW, SEW, SEW, SEW, SEW, CNW]
     ];
 
