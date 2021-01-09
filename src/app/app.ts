@@ -1,5 +1,6 @@
 import { AxesHelper, Clock, Color, DirectionalLight, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
 import { CityBuilder } from './citybuilder';
+import { SkeletonBuilder } from './skeletonbuilder';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -27,10 +28,12 @@ export class App {
     light.position.set(-1, 2, 4);
     this.scene.add(light);
 
-    new CityBuilder(this.scene, 100).create();
+    // new CityBuilder(this.scene, 100).create();
+    new SkeletonBuilder(this.scene).create();
 
     this.camera.position.set(0, 500, 1000);
     this.camera.lookAt(new Vector3(0, 0, 0));
+    this.camera.zoom = 12;
 
     this.renderer.setSize(innerWidth, innerHeight);
     this.renderer.setClearColor(new Color('rgb(0,0,0)'));
