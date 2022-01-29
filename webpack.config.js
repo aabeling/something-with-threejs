@@ -10,7 +10,7 @@ module.exports = {
     publicPath: '/dist/'
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js', '.png']
   },
   module: {
     rules: [
@@ -18,6 +18,12 @@ module.exports = {
         test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          'file-loader',
+        ],
       },
     ]
   },

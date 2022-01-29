@@ -1,8 +1,10 @@
 import { AxesHelper, Clock, Color, DirectionalLight, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
 import { CityBuilder } from './citybuilder';
+import { TerrainBuilder } from './terrainbuilder';
 import { SkeletonBuilder } from './skeletonbuilder';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export class App {
@@ -18,7 +20,7 @@ export class App {
 
   constructor() {
 
-    const axes = new AxesHelper();
+    const axes = new AxesHelper(10);
     axes.renderOrder = 1;
     this.scene.add(axes);
 
@@ -28,16 +30,19 @@ export class App {
     light.position.set(-1, 2, 4);
     this.scene.add(light);
 
-    // new CityBuilder(this.scene, 100).create();
-    new SkeletonBuilder(this.scene).create();
+    //new CityBuilder(this.scene, 100).create();
+    //new SkeletonBuilder(this.scene).create();
+    new TerrainBuilder(this.scene).create();
 
-    this.camera.position.set(0, 500, 1000);
+    this.camera.position.set(0, 0, 100);
     this.camera.lookAt(new Vector3(0, 0, 0));
     this.camera.zoom = 12;
 
     this.renderer.setSize(innerWidth, innerHeight);
     this.renderer.setClearColor(new Color('rgb(0,0,0)'));
 
+    //this.setPointerLockControls();
+    //this.setFirstPersonControls();  
     this.setOrbitControls();
 
     this.render();
@@ -52,6 +57,16 @@ export class App {
 
   private setOrbitControls() {
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+    this.controls.screenSpacePanning = true //so that panning up and down doesn't zoom in/out
+    this.controls.enablePan = false;
+  }
+
+  private setPointerLockControls() {
+
+    // geht noch nicht
+    this.controls = new PointerLockControls(this.camera, this.renderer.domElement);
+    
+    this.controls.lock();
   }
 
   private adjustCanvasSize() {

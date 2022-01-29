@@ -14,3 +14,9 @@ Copied from https://github.com/mterczynski/typescript-webpack-threejs-template
 
     yarn build
 
+## openssl problem
+
+```
+export NODE_OPTIONS=--openssl-legacy-provider
+```
+
