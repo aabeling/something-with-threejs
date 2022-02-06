@@ -22,8 +22,20 @@ export class TerrainBuilder {
         let terrainWidth = 1710;
         let terrainHeight = 797;
 
+        let planeMap = new TextureLoader().load(
+            'heightmap/material.png',
+            (texture) => {
+                planeMaterial.map = texture;
+                console.log("displacementmap loaded");
+            },
+            undefined,
+            (error) => {
+                console.error("failed to load displacementmap", error);
+            }
+        )
+
         let displacementMap = new TextureLoader().load(
-            'preetz_heightmap.png',
+            'heightmap/heightmap.png',
             (texture) => {
                 planeMaterial.displacementMap = texture;
                 console.log("displacementmap loaded");
@@ -35,11 +47,11 @@ export class TerrainBuilder {
         )
 
         let planeMaterial = new MeshPhongMaterial();
-        planeMaterial.map = displacementMap;
+        planeMaterial.map = planeMap;
         planeMaterial.displacementMap = displacementMap;
         planeMaterial.displacementBias = 0.0;
-        planeMaterial.displacementScale = 1.0;
-        let planeGeometry = new PlaneGeometry(20, 10, terrainWidth / 10, terrainHeight / 10);
+        planeMaterial.displacementScale = 4.0;
+        let planeGeometry = new PlaneGeometry(10, 10, terrainWidth / 10, terrainHeight / 10);
         let plane = new Mesh(planeGeometry, planeMaterial);
         plane.rotation.set(-Math.PI / 2, 0, 0);
     

@@ -1,24 +1,40 @@
-import { AxesHelper, Clock, Color, DirectionalLight, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
+import { AxesHelper, Clock, Color, DirectionalLight, PerspectiveCamera, Scene, Vector3, WebGLRenderer,
+  Vector } from 'three';
 import { CityBuilder } from './citybuilder';
 import { TerrainBuilder } from './terrainbuilder';
+import { ObjLandscape } from './obj_landscape';
 import { SkeletonBuilder } from './skeletonbuilder';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import Stats from 'three/examples/jsm/libs/stats.module';
 
 export class App {
 
   private readonly scene = new Scene();
-  private readonly camera = new PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 10000);
+  private readonly camera = new PerspectiveCamera(30, innerWidth / innerHeight, 1, 1000);
   private readonly renderer = new WebGLRenderer({
     antialias: true,
     canvas: document.getElementById('main-canvas') as HTMLCanvasElement,
   });
-  private controls : any;
+  private controls!: PointerLockControls;
   private clock : Clock = new Clock();
+  private stats : Stats = Stats();
+
+  /* movement inspired by https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_pointerlock.html */
+  private moveForward = false;
+  private moveBackward = false;
+  private moveLeft = false;
+  private moveRight = false;
+  private canJump = false;
+  private velocity = new Vector3();
+  private direction = new Vector3(1,0,0);
+  private lastRenderTime = performance.now();
 
   constructor() {
+
+    document.body.appendChild(this.stats.dom)
 
     const axes = new AxesHelper(10);
     axes.renderOrder = 1;
@@ -30,43 +46,114 @@ export class App {
     light.position.set(-1, 2, 4);
     this.scene.add(light);
 
-    //new CityBuilder(this.scene, 100).create();
-    //new SkeletonBuilder(this.scene).create();
-    new TerrainBuilder(this.scene).create();
+    new ObjLandscape(this.scene).create();
 
-    this.camera.position.set(0, 0, 100);
-    this.camera.lookAt(new Vector3(0, 0, 0));
+    this.camera.position.set(0, 1, 0);
+    this.camera.lookAt(new Vector3(1, 1, 0));
     this.camera.zoom = 12;
 
     this.renderer.setSize(innerWidth, innerHeight);
     this.renderer.setClearColor(new Color('rgb(0,0,0)'));
 
-    //this.setPointerLockControls();
-    //this.setFirstPersonControls();  
-    this.setOrbitControls();
+    this.setPointerLockControls();
 
-    this.render();
+    let self = this;
+    this.renderer.domElement.addEventListener(
+      'click',
+      function () {
+          if (self.controls.isLocked === false) {
+            self.controls.lock()
+          }
+      },
+      false
+    )
+
+    document.addEventListener('keydown', e => this.onKeyDown(e));
+    document.addEventListener('keyup', e => this.onKeyUp(e));
+
+    this.lastRenderTime = performance.now();
+    this.animate();
   }
 
-  private setFirstPersonControls() {
+  private onKeyDown(event : KeyboardEvent) {
 
-    this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
-    this.controls.movementSpeed = 100;
-    this.controls.lookSpeed = 0.1;
+    switch ( event.code ) {
+
+      case 'ArrowUp':
+      case 'KeyW':
+        this.moveForward = true;
+        break;
+
+      case 'ArrowLeft':
+      case 'KeyA':
+        this.moveLeft = true;
+        break;
+
+      case 'ArrowDown':
+      case 'KeyS':
+        this.moveBackward = true;
+        break;
+
+      case 'ArrowRight':
+      case 'KeyD':
+        this.moveRight = true;
+        break;
+
+      case 'Space':
+        /* TODO later
+        if ( canJump === true ) velocity.y += 350;
+        canJump = false;
+        break;
+        */
+    }
+
   }
 
-  private setOrbitControls() {
-    this.controls = new OrbitControls( this.camera, this.renderer.domElement );
-    this.controls.screenSpacePanning = true //so that panning up and down doesn't zoom in/out
-    this.controls.enablePan = false;
+  private onKeyUp(event : KeyboardEvent) {
+
+    switch ( event.code ) {
+
+      case 'ArrowUp':
+      case 'KeyW':
+        this.moveForward = false;
+        break;
+
+      case 'ArrowLeft':
+      case 'KeyA':
+        this.moveLeft = false;
+        break;
+
+      case 'ArrowDown':
+      case 'KeyS':
+        this.moveBackward = false;
+        break;
+
+      case 'ArrowRight':
+      case 'KeyD':
+        this.moveRight = false;
+        break;
+
+    }
   }
 
   private setPointerLockControls() {
 
-    // geht noch nicht
     this.controls = new PointerLockControls(this.camera, this.renderer.domElement);
     
-    this.controls.lock();
+    let render = this.renderer;
+    let self = this;
+    this.controls.addEventListener( 'lock', function () {
+
+      console.log("display locked");
+    
+    } );
+    
+    this.controls.addEventListener( 'unlock', function () {
+    
+      console.log("display unlocked");
+    } );
+
+    
   }
 
   private adjustCanvasSize() {
@@ -75,13 +162,48 @@ export class App {
     this.camera.updateProjectionMatrix();
   }
 
+  private animate() {
+
+    requestAnimationFrame(() => this.animate());
+
+    this.move();
+    this.render();
+    this.stats.update();
+  }
+
+  private move() {
+
+    const time = performance.now();
+
+    /* do not move if not locked */
+    if (this.controls.isLocked) {
+     
+      const timeDelta = ( time - this.lastRenderTime ) / 1000;
+
+      if (this.moveForward) {
+        this.controls.moveForward(timeDelta);
+      }
+
+      if (this.moveBackward) {
+        this.controls.moveForward(-timeDelta);
+      }
+
+      if (this.moveLeft) {
+        this.controls.moveRight(-timeDelta);
+      }
+
+      if (this.moveRight) {
+        this.controls.moveRight(timeDelta);
+      }
+    }
+
+    this.lastRenderTime = time;
+  }
+
   private render() {
 
     this.renderer.render(this.scene, this.camera);
-    requestAnimationFrame(() => this.render());
-
-    this.adjustCanvasSize();
-    const delta = this.clock.getDelta();
-    this.controls.update(delta);
+    //this.adjustCanvasSize();
   }
+
 }
