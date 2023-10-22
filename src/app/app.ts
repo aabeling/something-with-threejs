@@ -178,7 +178,7 @@ export class App {
     /* do not move if not locked */
     if (this.controls.isLocked) {
      
-      const timeDelta = ( time - this.lastRenderTime ) / 1000;
+      const timeDelta = ( time - this.lastRenderTime ) / 200;
 
       if (this.moveForward) {
         this.controls.moveForward(timeDelta);

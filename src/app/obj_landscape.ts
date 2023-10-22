@@ -4,6 +4,7 @@ import {
 import {
     OBJLoader
 } from 'three/examples/jsm/loaders/OBJLoader'
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader'
 
 /**
  * Experiment with displacement map to simulate a terrain with heights.
@@ -19,17 +20,36 @@ export class ObjLandscape {
     create() {
 
         let self = this;
-        let loader = new OBJLoader();
-        loader.load('landscape.obj',
-            function(object) {
-                self.scene.add(object);
-                console.log("landscape added to scene");
+        // https://sbcode.net/threejs/loaders-mtl/
+        // https://threejs.org/docs/#examples/en/loaders/MTLLoader
+        let mtlLoader = new MTLLoader();
+        mtlLoader.load(
+            'texturetest.mtl',
+            (materials) => {
+                materials.preload()
+        
+                const objLoader = new OBJLoader()
+                objLoader.setMaterials(materials)
+                objLoader.load(
+                    'texturetest.obj',
+                    (object) => {
+                        self.scene.add(object)
+                    },
+                    (xhr) => {
+                        console.log((xhr.loaded / xhr.total) * 100 + '% of object loaded')
+                    },
+                    (error) => {
+                        console.log('An error happened')
+                    }
+                )
             },
-            function(xhr) {
-                console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+            (xhr) => {
+                console.log((xhr.loaded / xhr.total) * 100 + '% of materials loaded')
             },
-            function(error) {
-                console.log( 'An error happened' );
-            });
+            (error) => {
+                console.log('An error happened')
+            }
+        )
+
     }
 }
