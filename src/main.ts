@@ -1,3 +1,3 @@
-import { App } from './app/app';
+import { Animation } from './app/animation';
 
-new App();
+new Animation();
