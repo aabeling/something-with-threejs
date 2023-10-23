@@ -66,13 +66,29 @@ export class Animation {
     const loader = new GLTFLoader();
     const self = this;
     loader.load( 'Xbot.glb', function ( gltf : GLTF ) {
-      console.log(gltf);
+
       let model = gltf.scene;
       self.scene.add( model );
 
       model.traverse( function ( object ) {
-        console.log(object);
-        // wie casted man zu Object3D oder Bone?
+
+        if ("Bone" == object.type) {
+          console.log(object);
+          if (object.name == 'mixamorigNeck') {
+            console.log(object)
+            let neck = object as THREE.Bone;
+            neck.rotation.x = 1.0;
+            neck.rotation.y = 1.0;
+            neck.rotation.z = 0.0;
+          }
+          if (object.name == 'mixamorigLeftArm') {
+            let bone = object as THREE.Bone;
+            bone.rotation.x = 1.0;
+            bone.rotation.y = 1.0;
+            bone.rotation.z = 0.0;
+          }
+        }
+
       } );
     });
 
