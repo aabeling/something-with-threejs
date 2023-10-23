@@ -90,6 +90,9 @@ export class Animation {
         }
 
       } );
+    }, function(progress) {},
+    function(error) {
+      console.error("failed to load", error);
     });
 
     this.stats = Stats();
