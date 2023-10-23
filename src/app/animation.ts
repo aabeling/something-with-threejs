@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 
 import { Scene, WebGLRenderer, PerspectiveCamera, Clock, Color,
- HemisphereLight, DirectionalLight, AxesHelper } from 'three';
+ HemisphereLight, DirectionalLight, AxesHelper, SkeletonHelper } from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
@@ -69,6 +69,11 @@ export class Animation {
 
       let model = gltf.scene;
       self.scene.add( model );
+
+
+      let skeleton = new SkeletonHelper( model );
+      skeleton.visible = true;
+      self.scene.add( skeleton );
 
       model.traverse( function ( object ) {
 
