@@ -6,10 +6,11 @@
 import * as THREE from 'three';
 
 import { Scene, WebGLRenderer, PerspectiveCamera, Clock, Color,
- HemisphereLight, DirectionalLight, AxesHelper, SkeletonHelper } from 'three';
+ HemisphereLight, DirectionalLight, AxesHelper, SkeletonHelper, Group } from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 
 export class Animation {
 
@@ -24,6 +25,8 @@ export class Animation {
 
   constructor() {
 
+    const container = document.getElementById('main-canvas') as HTMLCanvasElement;
+
     this.renderer.setSize( window.innerWidth, window.innerHeight );
     this.renderer.shadowMap.enabled = true;
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -31,7 +34,7 @@ export class Animation {
     this.camera.position.set( - 1, 2, 3 );
 
     this.scene.background = new Color( 0xa0a0a0 );
-		this.scene.fog = new THREE.Fog( 0xa0a0a0, 10, 50 );
+// 		this.scene.fog = new THREE.Fog( 0xa0a0a0, 10, 50 );
 
     const hemiLight = new HemisphereLight( 0xffffff, 0x8d8d8d, 3 );
     hemiLight.position.set( 0, 20, 0 );
@@ -63,11 +66,15 @@ export class Animation {
     controls.target.set( 0, 1, 0 );
     controls.update();
 
-    const loader = new GLTFLoader();
+//     const loader = new GLTFLoader();
+    const loader = new FBXLoader();
     const self = this;
-    loader.load( 'Xbot.glb', function ( gltf : GLTF ) {
-
-      let model = gltf.scene;
+//     loader.load( 'Xbot.glb', function ( gltf : GLTF ) {
+    loader.load( 'Ybot.fbx', function ( object : Group ) {
+//       let model = gltf.scene;
+      let model = object;
+      // fbx needs scaling
+      model.scale.set(0.01,0.01,0.01)
       self.scene.add( model );
 
 
@@ -100,8 +107,10 @@ export class Animation {
       console.error("failed to load", error);
     });
 
+    // stats are not displayed yet, don't know why
     this.stats = Stats();
-    this.renderer.domElement.appendChild( this.stats.dom );
+    container.appendChild(this.stats.dom)
+
 
     this.animate();
   }
@@ -113,7 +122,12 @@ export class Animation {
 
   private render() {
     this.renderer.render(this.scene, this.camera);
+    this.stats.update();
   }
 
+  private createPanel() {
+
+//     const panel = new GUI( { width: 310 } );
+  }
 }
 
