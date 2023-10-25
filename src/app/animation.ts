@@ -102,7 +102,9 @@ export class Animation {
         }
 
       } );
-    }, function(progress) {},
+    }, function(progress : ProgressEvent) {
+      console.log(`loading progress: ${progress.loaded * 100 / progress.total}%`);
+    },
     function(error) {
       console.error("failed to load", error);
     });
