@@ -66,15 +66,15 @@ export class Animation {
     controls.target.set( 0, 1, 0 );
     controls.update();
 
-//     const loader = new GLTFLoader();
-    const loader = new FBXLoader();
+    const loader = new GLTFLoader();
+//     const loader = new FBXLoader();
     const self = this;
-//     loader.load( 'Xbot.glb', function ( gltf : GLTF ) {
-    loader.load( 'sophie.fbx', function ( object : Group ) {
-//       let model = gltf.scene;
-      let model = object;
+    loader.load( 'Xbot.glb', function ( gltf : GLTF ) {
+//     loader.load( 'sophie.fbx', function ( object : Group ) {
+      let model = gltf.scene;
+//       let model = object;
       // fbx needs scaling
-      model.scale.set(0.01,0.01,0.01)
+//       model.scale.set(0.01,0.01,0.01)
       self.scene.add( model );
 
 
