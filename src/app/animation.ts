@@ -70,7 +70,7 @@ export class Animation {
     const loader = new FBXLoader();
     const self = this;
 //     loader.load( 'Xbot.glb', function ( gltf : GLTF ) {
-    loader.load( 'Ybot.fbx', function ( object : Group ) {
+    loader.load( 'sophie.fbx', function ( object : Group ) {
 //       let model = gltf.scene;
       let model = object;
       // fbx needs scaling
@@ -89,13 +89,13 @@ export class Animation {
           if (object.name == 'mixamorigNeck') {
             console.log(object)
             let neck = object as THREE.Bone;
-            neck.rotation.x = 1.0;
-            neck.rotation.y = 1.0;
+            neck.rotation.x = 0.0;
+            neck.rotation.y = 0.0;
             neck.rotation.z = 0.0;
           }
           if (object.name == 'mixamorigLeftArm') {
             let bone = object as THREE.Bone;
-            bone.rotation.x = 1.0;
+            bone.rotation.x = 0.5;
             bone.rotation.y = 1.0;
             bone.rotation.z = 0.0;
           }
