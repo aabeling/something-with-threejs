@@ -1,4 +1,4 @@
-import { Scene, Bone, Skeleton, SkeletonHelper, SkinnedMesh, CylinderBufferGeometry, BufferGeometry, MeshPhongMaterial, DoubleSide } from "three";
+import { Scene, Bone, Skeleton, SkeletonHelper, SkinnedMesh, CylinderGeometry, BufferGeometry, MeshPhongMaterial, DoubleSide } from "three";
 import { Vector3, Uint16BufferAttribute, Float32BufferAttribute } from "three";
 
 /**
@@ -15,7 +15,7 @@ export class SkeletonBuilder {
 
     initBones() {
 
-        const segmentHeight = 8;        
+        const segmentHeight = 8;
         const segmentCount = 4; // number of bones
         const height = segmentHeight * segmentCount;
         const halfHeight = height * 0.5;
@@ -37,7 +37,7 @@ export class SkeletonBuilder {
 
     createGeometry( sizing : any) : BufferGeometry {
 
-        const geometry = new CylinderBufferGeometry(
+        const geometry = new CylinderGeometry(
             5, // radiusTop
             5, // radiusBottom
             sizing.height, // height
@@ -98,11 +98,11 @@ export class SkeletonBuilder {
     createMesh( geometry : BufferGeometry, bones : Bone[]) {
 
         const material = new MeshPhongMaterial( {
-            skinning: true,
-            color: 0x156289,
-            emissive: 0x072534,
-            side: DoubleSide,
-            flatShading: true
+//             skinning: true,
+//             color: 0x156289,
+//             emissive: 0x072534,
+//             side: DoubleSide,
+//             flatShading: true
         } );
 
         const mesh = new SkinnedMesh( geometry,	material );

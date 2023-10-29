@@ -5,7 +5,7 @@
 
 import { Scene, WebGLRenderer, PerspectiveCamera, Clock, Color, Fog,
  HemisphereLight, DirectionalLight, AxesHelper, SkeletonHelper, Group, Bone,
- Mesh, PlaneGeometry, MeshPhongMaterial } from 'three';
+ Mesh, PlaneGeometry, MeshPhongMaterial, Object3D } from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -16,7 +16,7 @@ export class Animation {
   private readonly scene : Scene;
   private renderer : WebGLRenderer;
   private camera : PerspectiveCamera;
-  private stats : Stats = Stats();
+  private stats : Stats = new Stats();
   private readonly clock = new Clock();
 
   constructor() {
@@ -28,7 +28,7 @@ export class Animation {
      */
     this.scene = new Scene();
     this.scene.background = new Color( 0xa0a0a0 );
-		this.scene.fog = new Fog( 0xa0a0a0, 10, 50 );
+		this.scene.fog = new Fog( 0xa0a0a0, 1, 10 );
 
     const hemiLight = new HemisphereLight( 0xffffff, 0x8d8d8d, 3 );
     hemiLight.position.set( 0, 20, 0 );
@@ -76,7 +76,7 @@ export class Animation {
     controls.target.set( 0, 1, 0 );
     controls.update();
 
-    this.stats = Stats();
+    this.stats = new Stats();
     container.appendChild(this.stats.dom)
 
     this.animate();
@@ -139,7 +139,10 @@ export class Animation {
     this.scene.add( skeleton );
 
     /* move some bones just to test */
-    model.traverse( function ( object ) {
+    model.traverse( function ( object : Object3D ) {
+
+      console.log(object);
+      object.castShadow = true;
       if ("Bone" == object.type) {
         if (object.name == 'mixamorigNeck') {
           console.log(object)

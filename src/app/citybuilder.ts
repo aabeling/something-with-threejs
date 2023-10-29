@@ -1,4 +1,5 @@
-import { BoxBufferGeometry, Color, DoubleSide, Group, Mesh, MeshBasicMaterial, MeshPhongMaterial, Object3D, PlaneBufferGeometry, RingBufferGeometry, Scene } from "three";
+import { BufferGeometry, Color, DoubleSide, Group, Mesh, MeshBasicMaterial, MeshPhongMaterial,
+  Object3D, Scene } from "three";
 
 /* plains */
 const PEP: number = 1; // plain empty
@@ -62,61 +63,61 @@ export class CityBuilder {
 
         let result = new Group();
 
-        /* define underground */
-        let material = new MeshBasicMaterial({ color: 0x1010ff, side: DoubleSide });
-        let geometry = new PlaneBufferGeometry(this.fieldWidth, this.fieldWidth);
-        let plane = new Mesh(geometry, material);
-        plane.rotation.set(Math.PI / 2, 0, 0);
-        if (type < 10) {
-            material.color = new Color('green');
-        } else {
-            material.color = new Color('grey');
-        }
-        result.add(plane);
-
-        if (type == PH1) {
-            /* add house */
-            let house = this.createHouse();
-            result.add(house);
-
-        } else if (type >= 10 && type <= 13) {
-
-            /* add curve */
-            let curve = this.createCurve();
-            if (type == CSE) {
-                curve.rotation.set(0, Math.PI, 0);
-            } else if (type == CSW) {
-                curve.rotation.set(0, Math.PI / 2, 0);
-            } else if (type == CNE) {
-                curve.rotation.set(0, 3 * Math.PI / 2, 0);
-            }
-            result.add(curve);
-        } else if (type >= SEW && type <= SNS) {
-
-            /* add straight */
-            let straight = this.createStraight();
-            if (type == SNS) {
-                straight.rotation.set(0, Math.PI / 2, 0);
-            }
-            result.add(straight);
-        }
+//         /* define underground */
+//         let material = new MeshBasicMaterial({ color: 0x1010ff, side: DoubleSide });
+//         let geometry = new BufferGeometry(this.fieldWidth, this.fieldWidth);
+//         let plane = new Mesh(geometry, material);
+//         plane.rotation.set(Math.PI / 2, 0, 0);
+//         if (type < 10) {
+//             material.color = new Color('green');
+//         } else {
+//             material.color = new Color('grey');
+//         }
+//         result.add(plane);
+//
+//         if (type == PH1) {
+//             /* add house */
+//             let house = this.createHouse();
+//             result.add(house);
+//
+//         } else if (type >= 10 && type <= 13) {
+//
+//             /* add curve */
+//             let curve = this.createCurve();
+//             if (type == CSE) {
+//                 curve.rotation.set(0, Math.PI, 0);
+//             } else if (type == CSW) {
+//                 curve.rotation.set(0, Math.PI / 2, 0);
+//             } else if (type == CNE) {
+//                 curve.rotation.set(0, 3 * Math.PI / 2, 0);
+//             }
+//             result.add(curve);
+//         } else if (type >= SEW && type <= SNS) {
+//
+//             /* add straight */
+//             let straight = this.createStraight();
+//             if (type == SNS) {
+//                 straight.rotation.set(0, Math.PI / 2, 0);
+//             }
+//             result.add(straight);
+//         }
 
         return result;
     }
 
     createHouse(): Object3D {
 
-        let width = this.random(this.fieldWidth / 2, this.fieldWidth);
-        let height = this.random(this.fieldWidth, 3 * this.fieldWidth);
-        let depth = this.random(this.fieldWidth / 2, this.fieldWidth);
-
-        let geometry = new BoxBufferGeometry(width, height, depth);
-        let material = new MeshPhongMaterial({ color: 0xF4A460, side: DoubleSide });
-        let mesh = new Mesh(geometry, material);
-        mesh.translateY(height/2);
+//         let width = this.random(this.fieldWidth / 2, this.fieldWidth);
+//         let height = this.random(this.fieldWidth, 3 * this.fieldWidth);
+//         let depth = this.random(this.fieldWidth / 2, this.fieldWidth);
+//
+//         let geometry = new BufferGeometry(width, height, depth);
+//         let material = new MeshPhongMaterial({ color: 0xF4A460, side: DoubleSide });
+//         let mesh = new Mesh(geometry, material);
+//         mesh.translateY(height/2);
         let result = new Group();
-        result.add(mesh);
-
+//         result.add(mesh);
+//
         return result;
     }
 
@@ -127,11 +128,11 @@ export class CityBuilder {
 
         let result = new Group();
 
-        let geometry = new PlaneBufferGeometry(this.fieldWidth, this.fieldWidth * (1.0 - 2 * SIDE_RATIO));
-        let mesh = new Mesh(geometry, MATERIAL_STREET);
-        mesh.rotation.set(Math.PI / 2, 0, 0);
-        mesh.translateZ(-1);
-        result.add(mesh);
+//         let geometry = new PlaneBufferGeometry(this.fieldWidth, this.fieldWidth * (1.0 - 2 * SIDE_RATIO));
+//         let mesh = new Mesh(geometry, MATERIAL_STREET);
+//         mesh.rotation.set(Math.PI / 2, 0, 0);
+//         mesh.translateZ(-1);
+//         result.add(mesh);
         return result;
     }
 
@@ -142,18 +143,18 @@ export class CityBuilder {
 
         let result = new Group();
 
-        let innerRadius = this.fieldWidth * SIDE_RATIO;
-        let outerRadius = this.fieldWidth * (1 - SIDE_RATIO);
-
-        let geometry = new RingBufferGeometry(innerRadius, outerRadius, 9, 5, 0.0, Math.PI / 2);
-        let mesh = new Mesh(geometry, MATERIAL_STREET);
-        mesh.rotation.set(Math.PI / 2, 0, 0);
-        mesh.translateX(-this.fieldWidth / 2);
-        mesh.translateY(-this.fieldWidth / 2);
-        mesh.translateZ(-1);
-        result.add(mesh);
-
-        // TODO Begrenzungen an den Seiten, Linien, Bordsteinkante?
+//         let innerRadius = this.fieldWidth * SIDE_RATIO;
+//         let outerRadius = this.fieldWidth * (1 - SIDE_RATIO);
+//
+//         let geometry = new BufferGeometry(innerRadius, outerRadius, 9, 5, 0.0, Math.PI / 2);
+//         let mesh = new Mesh(geometry, MATERIAL_STREET);
+//         mesh.rotation.set(Math.PI / 2, 0, 0);
+//         mesh.translateX(-this.fieldWidth / 2);
+//         mesh.translateY(-this.fieldWidth / 2);
+//         mesh.translateZ(-1);
+//         result.add(mesh);
+//
+//         // TODO Begrenzungen an den Seiten, Linien, Bordsteinkante?
 
         return result;
     }

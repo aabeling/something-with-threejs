@@ -20,7 +20,7 @@ export class App {
   });
   private controls!: PointerLockControls;
   private clock : Clock = new Clock();
-  private stats : Stats = Stats();
+  private stats : Stats = new Stats();
 
   /* movement inspired by https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_pointerlock.html */
   private moveForward = false;
@@ -139,21 +139,21 @@ export class App {
   private setPointerLockControls() {
 
     this.controls = new PointerLockControls(this.camera, this.renderer.domElement);
-    
+
     let render = this.renderer;
     let self = this;
     this.controls.addEventListener( 'lock', function () {
 
       console.log("display locked");
-    
+
     } );
-    
+
     this.controls.addEventListener( 'unlock', function () {
-    
+
       console.log("display unlocked");
     } );
 
-    
+
   }
 
   private adjustCanvasSize() {
@@ -177,7 +177,7 @@ export class App {
 
     /* do not move if not locked */
     if (this.controls.isLocked) {
-     
+
       const timeDelta = ( time - this.lastRenderTime ) / 200;
 
       if (this.moveForward) {
