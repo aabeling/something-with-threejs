@@ -34,18 +34,17 @@ export class Animation {
     hemiLight.position.set( 0, 20, 0 );
     this.scene.add( hemiLight );
 
-//
-//     const dirLight = new DirectionalLight( 0xffffff, 3 );
-//     dirLight.position.set( 3, 10, 10 );
-//     dirLight.castShadow = true;
-//     dirLight.shadow.camera.top = 2;
-//     dirLight.shadow.camera.bottom = - 2;
-//     dirLight.shadow.camera.left = - 2;
-//     dirLight.shadow.camera.right = 2;
-//     dirLight.shadow.camera.near = 0.1;
-//     dirLight.shadow.camera.far = 40;
-//     this.scene.add( dirLight );
-//
+    const dirLight = new DirectionalLight( 0xffffff, 3 );
+    dirLight.position.set( 3, 10, 10 );
+    dirLight.castShadow = true;
+    dirLight.shadow.camera.top = 2;
+    dirLight.shadow.camera.bottom = - 2;
+    dirLight.shadow.camera.left = - 2;
+    dirLight.shadow.camera.right = 2;
+    dirLight.shadow.camera.near = 0.1;
+    dirLight.shadow.camera.far = 40;
+    this.scene.add( dirLight );
+
     const mesh = new Mesh(
       new PlaneGeometry( 100, 100 ),
       new MeshPhongMaterial( { color: 0xcbcbcb, depthWrite: false } ) );
@@ -57,47 +56,7 @@ export class Animation {
     axes.renderOrder = 1;
     this.scene.add(axes);
 
-    const loader = new GLTFLoader();
-//     const loader = new FBXLoader();
-    const self = this;
-    loader.load( 'Xbot.glb', function ( gltf : GLTF ) {
-//     loader.load( 'sophie.fbx', function ( object : Group ) {
-      let model = gltf.scene;
-//       let model = object;
-      // fbx needs scaling
-//       model.scale.set(0.01,0.01,0.01)
-      self.scene.add( model );
-
-      let skeleton = new SkeletonHelper( model );
-      skeleton.visible = true;
-      self.scene.add( skeleton );
-
-      model.traverse( function ( object ) {
-
-        if ("Bone" == object.type) {
-//           console.log(object);
-          if (object.name == 'mixamorigNeck') {
-            console.log(object)
-            let neck = object as Bone;
-            neck.rotation.x = 0.0;
-            neck.rotation.y = 0.0;
-            neck.rotation.z = 0.0;
-          }
-          if (object.name == 'mixamorigLeftArm') {
-            let bone = object as Bone;
-            bone.rotation.x = 0.5;
-            bone.rotation.y = 1.0;
-            bone.rotation.z = 0.0;
-          }
-        }
-
-      } );
-    }, function(progress : ProgressEvent) {
-      console.log(`loading progress: ${progress.loaded * 100 / progress.total}%`);
-    },
-    function(error) {
-      console.error("failed to load", error);
-    });
+    this.loadGltf();
 
     /* prepare renderer */
     this.renderer = new WebGLRenderer( { antialias: true } );
@@ -137,6 +96,66 @@ export class Animation {
   private createPanel() {
 
 //     const panel = new GUI( { width: 310 } );
+  }
+
+  private loadGltf() {
+
+    const loader = new GLTFLoader();
+    const self = this;
+    loader.load( 'Xbot.glb', function ( gltf : GLTF ) {
+      let model = gltf.scene;
+      self.addModel(model);
+    }, function(progress : ProgressEvent) {
+      console.log(`loading progress: ${progress.loaded * 100 / progress.total}%`);
+    },
+    function(error) {
+      console.error("failed to load", error);
+    });
+  }
+
+  private loadFbx() {
+
+    const loader = new FBXLoader();
+    const self = this;
+    loader.load( 'Ybot.fbx', function ( object : Group ) {
+      let model = object;
+      // fbx needs scaling
+      model.scale.set(0.01,0.01,0.01)
+      self.addModel(model);
+    }, function(progress : ProgressEvent) {
+      console.log(`loading progress: ${progress.loaded * 100 / progress.total}%`);
+    },
+    function(error) {
+      console.error("failed to load", error);
+    });
+  }
+
+  private addModel( model : Group) {
+
+    this.scene.add( model );
+
+    let skeleton = new SkeletonHelper( model );
+    skeleton.visible = true;
+    this.scene.add( skeleton );
+
+    /* move some bones just to test */
+    model.traverse( function ( object ) {
+      if ("Bone" == object.type) {
+        if (object.name == 'mixamorigNeck') {
+          console.log(object)
+          let neck = object as Bone;
+          neck.rotation.x = 0.0;
+          neck.rotation.y = 0.0;
+          neck.rotation.z = 0.0;
+        }
+        if (object.name == 'mixamorigLeftArm') {
+          let bone = object as Bone;
+          bone.rotation.x = 0.5;
+          bone.rotation.y = 1.0;
+          bone.rotation.z = 0.0;
+        }
+      }
+    } );
   }
 }
 
