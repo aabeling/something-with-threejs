@@ -14,11 +14,8 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 
 export class Animation {
 
-  private readonly scene = new Scene();
-  private readonly renderer = new WebGLRenderer({
-    antialias: true,
-    canvas: document.getElementById('main-canvas') as HTMLCanvasElement
-  });
+  private readonly scene : Scene;
+  private renderer : WebGLRenderer;
   private camera : PerspectiveCamera;
   private stats : Stats = Stats();
   private readonly clock = new Clock();
@@ -27,31 +24,37 @@ export class Animation {
 
     const container = document.getElementById('main-canvas') as HTMLCanvasElement;
 
+    this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( window.innerWidth, window.innerHeight );
     this.renderer.shadowMap.enabled = true;
-    this.renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild( this.renderer.domElement );
+
     this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 100 );
     this.camera.position.set( - 1, 2, 3 );
 
+    this.scene = new Scene();
     this.scene.background = new Color( 0xa0a0a0 );
-// 		this.scene.fog = new THREE.Fog( 0xa0a0a0, 10, 50 );
+		this.scene.fog = new THREE.Fog( 0xa0a0a0, 10, 50 );
 
     const hemiLight = new HemisphereLight( 0xffffff, 0x8d8d8d, 3 );
     hemiLight.position.set( 0, 20, 0 );
     this.scene.add( hemiLight );
 
-//     const dirLight = new DirectionalLight( 0xffffff, 3 );
-//     dirLight.position.set( 3, 10, 10 );
-//     dirLight.castShadow = true;
-//     dirLight.shadow.camera.top = 2;
-//     dirLight.shadow.camera.bottom = - 2;
-//     dirLight.shadow.camera.left = - 2;
-//     dirLight.shadow.camera.right = 2;
-//     dirLight.shadow.camera.near = 0.1;
-//     dirLight.shadow.camera.far = 40;
-//     this.scene.add( dirLight );
+    const dirLight = new DirectionalLight( 0xffffff, 3 );
+    dirLight.position.set( 3, 10, 10 );
+    dirLight.castShadow = true;
+    dirLight.shadow.camera.top = 2;
+    dirLight.shadow.camera.bottom = - 2;
+    dirLight.shadow.camera.left = - 2;
+    dirLight.shadow.camera.right = 2;
+    dirLight.shadow.camera.near = 0.1;
+    dirLight.shadow.camera.far = 40;
+    this.scene.add( dirLight );
 
-    const mesh = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshPhongMaterial( { color: 0xcbcbcb, depthWrite: false } ) );
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry( 100, 100 ),
+      new THREE.MeshPhongMaterial( { color: 0xcbcbcb, depthWrite: false } ) );
     mesh.rotation.x = - Math.PI / 2;
     mesh.receiveShadow = true;
     this.scene.add( mesh );
@@ -85,7 +88,7 @@ export class Animation {
       model.traverse( function ( object ) {
 
         if ("Bone" == object.type) {
-          console.log(object);
+//           console.log(object);
           if (object.name == 'mixamorigNeck') {
             console.log(object)
             let neck = object as THREE.Bone;
@@ -109,10 +112,8 @@ export class Animation {
       console.error("failed to load", error);
     });
 
-    // stats are not displayed yet, don't know why
     this.stats = Stats();
     container.appendChild(this.stats.dom)
-
 
     this.animate();
   }
@@ -123,6 +124,7 @@ export class Animation {
   }
 
   private render() {
+
     this.renderer.render(this.scene, this.camera);
     this.stats.update();
   }
