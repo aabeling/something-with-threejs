@@ -10,6 +10,8 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
+import { Gui } from './gui';
+
 
 export class Animation {
 
@@ -17,6 +19,7 @@ export class Animation {
   private renderer : WebGLRenderer;
   private camera : PerspectiveCamera;
   private stats : Stats = new Stats();
+  private gui : Gui;
   private readonly clock = new Clock();
 
   constructor() {
@@ -67,7 +70,7 @@ export class Animation {
 
     /* prepare camera */
     this.camera = new PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 100 );
-    this.camera.position.set( - 1, 2, 3 );
+    this.camera.position.set( 1, 2, 3 );
 
     /* prepare controls */
     const controls = new OrbitControls( this.camera, this.renderer.domElement );
@@ -79,7 +82,12 @@ export class Animation {
     this.stats = new Stats();
     container.appendChild(this.stats.dom)
 
+    this.gui = new Gui();
+    container.appendChild(this.gui.dom);
+
     this.animate();
+
+    window.addEventListener( 'resize', this.onWindowResize );
   }
 
   private animate() {
@@ -102,7 +110,7 @@ export class Animation {
 
     const loader = new GLTFLoader();
     const self = this;
-    loader.load( 'Xbot.glb', function ( gltf : GLTF ) {
+    loader.load( 'Ybot.glb', function ( gltf : GLTF ) {
       let model = gltf.scene;
       self.addModel(model);
     }, function(progress : ProgressEvent) {
@@ -159,6 +167,13 @@ export class Animation {
         }
       }
     } );
+  }
+
+  private onWindowResize = () => {
+
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
   }
 }
 
