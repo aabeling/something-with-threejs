@@ -12,7 +12,9 @@ import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { Gui } from './gui';
 
-
+/**
+ * Kind of a jointed doll (german: Gliederpuppe) with controls for all bones.
+ */
 export class Animation {
 
   private readonly scene : Scene;
@@ -21,6 +23,7 @@ export class Animation {
   private stats : Stats = new Stats();
   private gui : Gui;
   private readonly clock = new Clock();
+  private model : Group = new Group();
 
   constructor() {
 
@@ -59,6 +62,8 @@ export class Animation {
     axes.renderOrder = 1;
     this.scene.add(axes);
 
+    this.gui = new Gui();
+
     this.loadGltf();
 
     /* prepare renderer */
@@ -82,7 +87,6 @@ export class Animation {
     this.stats = new Stats();
     container.appendChild(this.stats.dom)
 
-    this.gui = new Gui();
     container.appendChild(this.gui.dom);
 
     this.animate();
@@ -101,11 +105,6 @@ export class Animation {
     this.stats.update();
   }
 
-  private createPanel() {
-
-//     const panel = new GUI( { width: 310 } );
-  }
-
   private loadGltf() {
 
     const loader = new GLTFLoader();
@@ -113,6 +112,7 @@ export class Animation {
     loader.load( 'Ybot.glb', function ( gltf : GLTF ) {
       let model = gltf.scene;
       self.addModel(model);
+      self.gui.updateModel(model);
     }, function(progress : ProgressEvent) {
       console.log(`loading progress: ${progress.loaded * 100 / progress.total}%`);
     },
@@ -130,6 +130,7 @@ export class Animation {
       // fbx needs scaling
       model.scale.set(0.01,0.01,0.01)
       self.addModel(model);
+      self.model = model;
     }, function(progress : ProgressEvent) {
       console.log(`loading progress: ${progress.loaded * 100 / progress.total}%`);
     },
@@ -148,24 +149,7 @@ export class Animation {
 
     /* move some bones just to test */
     model.traverse( function ( object : Object3D ) {
-
-      console.log(object);
       object.castShadow = true;
-      if ("Bone" == object.type) {
-        if (object.name == 'mixamorigNeck') {
-          console.log(object)
-          let neck = object as Bone;
-          neck.rotation.x = 0.0;
-          neck.rotation.y = 0.0;
-          neck.rotation.z = 0.0;
-        }
-        if (object.name == 'mixamorigLeftArm') {
-          let bone = object as Bone;
-          bone.rotation.x = 0.5;
-          bone.rotation.y = 1.0;
-          bone.rotation.z = 0.0;
-        }
-      }
     } );
   }
 
